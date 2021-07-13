@@ -1,15 +1,28 @@
+import React from "react";
 import "./App.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import Login from "./components/Login/Login";
+import Register from "./components/Register/Register";
 import Header from "./components/Header/Header";
-import Registration from "./components/RegistrationForm/RegistrationForm";
 
 function App() {
   return (
-    <div className="App">
-      <Header />
-      <div className="container d-flex align-items-center flex-column">
-        <Registration />
+    <Router>
+      <div className="App">
+        <Header />
+
+        <div className="outer">
+          <div className="inner">
+            <Switch>
+              <Route exact path="/" component={Login} />
+              <Route path="/sign-in" component={Login} />
+              <Route path="/sign-up" component={Register} />
+            </Switch>
+          </div>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 
