@@ -17,7 +17,7 @@ body, html, .App, #root, .outer {
 }
 
 .outer {
-  margin-top: 20px;
+  margin-top: 25px;
   display: flex;
   justify-content: center;
   flex-direction: column;

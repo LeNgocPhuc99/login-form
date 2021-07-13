@@ -1,6 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 
 function Register(props) {
+  const [state, setState] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setState((preState) => ({
+      ...preState,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmitClick = (e) => {
+    e.preventDefault()
+    if(state.password === state.confirmPassword) {
+      console.log("match password")
+      console.log(state.firstName, state.lastName, state.email, state.username)
+    } else {
+      console.log("don't match password")
+    }
+  }
+
   return (
     <form>
       <h3>Register</h3>
@@ -9,12 +37,26 @@ function Register(props) {
         <div className="row">
           <div className="col">
             <label>First name</label>
-            <input type="text" class="form-control" placeholder="First name" />
+            <input
+              type="text"
+              className="form-control"
+              id="firstName"
+              placeholder="First name"
+              value={state.firstName}
+              onChange={handleChange}
+            />
           </div>
 
           <div className="col">
             <label>Last name</label>
-            <input type="text" class="form-control" placeholder="Last name" />
+            <input
+              type="text"
+              className="form-control"
+              id="lastName"
+              placeholder="Last name"
+              value={state.lastName}
+              onChange={handleChange}
+            />
           </div>
         </div>
       </div>
@@ -24,7 +66,10 @@ function Register(props) {
         <input
           type="email"
           className="form-control"
+          id="email"
           placeholder="Enter email"
+          value={state.email}
+          onChange={handleChange}
         />
       </div>
 
@@ -32,8 +77,11 @@ function Register(props) {
         <label>Username</label>
         <input
           type="email"
+          id="username"
           className="form-control"
           placeholder="Enter username"
+          value={state.username}
+          onChange={handleChange}
         />
       </div>
 
@@ -42,11 +90,30 @@ function Register(props) {
         <input
           type="password"
           className="form-control"
+          id="password"
           placeholder="Enter password"
+          value={state.password}
+          onChange={handleChange}
         />
       </div>
 
-      <button type="submit" className="btn btn-dark btn-lg btn-block">
+      <div className="form-group">
+        <label>Confirm Password</label>
+        <input
+          type="password"
+          className="form-control"
+          id="confirmPassword"
+          placeholder="Enter password"
+          value={state.confirmPassword}
+          onChange={handleChange}
+        />
+      </div>
+
+      <button 
+      type="submit" 
+      className="btn btn-dark btn-lg btn-block"
+      onClick={handleSubmitClick}
+      >
         Register
       </button>
       <p className="forgot-password text-right">Already registered login ?</p>
@@ -54,4 +121,4 @@ function Register(props) {
   );
 }
 
-export default Register;
+export default withRouter(Register);

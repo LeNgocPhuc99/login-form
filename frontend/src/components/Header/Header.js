@@ -5,19 +5,19 @@ function Header(props) {
   return (
     <nav className="navbar navbar-expand-lg  navbar-dark bg-dark fixed-top">
       <div className="container">
-        <Link className="navbar-brand" to={"/sign-in"}>
+        <Link className="navbar-brand" to={"/login"}>
           Login Form
         </Link>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link className="nav-link" to={"/sign-in"}>
-                Sign in
+              <Link className="nav-link" to={"/login"}>
+                Login
               </Link>
             </li>
             <li className="navbar-item">
-              <Link className="nav-link" to={"/sign-up"}>
-                Sign up
+              <Link className="nav-link" to={"/register"}>
+                Register
               </Link>
             </li>
           </ul>

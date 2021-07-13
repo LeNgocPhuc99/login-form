@@ -1,16 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 
 function Login(props) {
+  const [state, setState] = useState({
+    username: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setState((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmitClick = (e) => {
+    e.preventDefault();
+    const payload = {
+      email: state.username,
+      password: state.password,
+    };
+
+    console.log(payload);
+  };
+
   return (
     <form>
-      <h3>Log in</h3>
+      <h3>Login</h3>
 
       <div className="form-group">
-        <label>Password</label>
+        <label>Username</label>
         <input
           type="text"
           className="form-control"
+          id="username"
           placeholder="Enter Username"
+          value={state.username}
+          onChange={handleChange}
         />
       </div>
 
@@ -19,7 +46,10 @@ function Login(props) {
         <input
           type="password"
           className="form-control"
+          id="password"
           placeholder="Enter password"
+          value={state.password}
+          onChange={handleChange}
         />
       </div>
 
@@ -36,12 +66,16 @@ function Login(props) {
         </div>
       </div>
 
-      <button type="submit" className="btn btn-dark btn-lg btn-block">
-        Sign in
+      <button
+        type="submit"
+        className="btn btn-dark btn-lg btn-block"
+        onClick={handleSubmitClick}
+      >
+        Login
       </button>
       <p className="forgot-password text-right">Forgot password</p>
     </form>
   );
 }
 
-export default Login;
+export default withRouter(Login);
