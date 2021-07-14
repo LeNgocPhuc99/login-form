@@ -14,17 +14,19 @@ import (
 )
 
 func Register(rw http.ResponseWriter, r *http.Request) {
-	rw.Header().Set("Content-type", "application/json")
-	var user models.User
-	json.NewDecoder(r.Body).Decode(&user)
-	user.Password = helpers.HashPassword(user.Password)
-	collection := database.Client.Database(configs.DB_NAME).Collection(configs.COLL_NAME)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	rw.Header().Set("Context-Type", "application/json")
+	if r.Method == http.MethodPost {
+		var user models.User
+		json.NewDecoder(r.Body).Decode(&user)
+		user.Password = helpers.HashPassword(user.Password)
+		collection := database.Client.Database(configs.DB_NAME).Collection(configs.COLL_NAME)
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
 
-	result, err := collection.InsertOne(ctx, user)
-	helpers.HandleError(err)
-	json.NewEncoder(rw).Encode(result)
+		result, err := collection.InsertOne(ctx, user)
+		helpers.HandleError(err)
+		json.NewEncoder(rw).Encode(result)
+	}
 }
 
 func Login(rw http.ResponseWriter, r *http.Request) {
