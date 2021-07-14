@@ -2,7 +2,9 @@ import axios from "axios";
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 
-let endpoint = "http://localhost:8080";
+import { API_URL, ACCESS_TOKEN } from "../../constants/constants";
+
+// let endpoint = "http://localhost:8080";
 
 function Login(props) {
   const [state, setState] = useState({
@@ -26,10 +28,11 @@ function Login(props) {
     };
 
     axios
-      .post(endpoint + "/api/user/login", payload)
+      .post(API_URL + "/api/user/login", payload)
       .then(function (res) {
         if (res.status === 200) {
-          console.log(res.data.token);
+          console.log("Login success.");
+          sessionStorage.setItem(ACCESS_TOKEN, res.data.token)
         }
       })
       .catch(function (error) {

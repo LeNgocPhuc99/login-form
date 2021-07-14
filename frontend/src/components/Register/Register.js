@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 
-let endpoint = "http://localhost:8080";
+import { API_URL, ACCESS_TOKEN } from "../../constants/constants";
+
+// let endpoint = "http://localhost:8080";
 
 function Register(props) {
   const [state, setState] = useState({
@@ -25,7 +27,7 @@ function Register(props) {
   const handleSubmitClick = (e) => {
     e.preventDefault();
     if (state.password === state.confirmPassword) {
-      sendToServer()
+      sendToServer();
     } else {
       console.log("don't match password");
     }
@@ -40,10 +42,11 @@ function Register(props) {
       password: state.password,
     };
     axios
-      .post(endpoint + '/api/user/register', payload)
+      .post(API_URL + "/api/user/register", payload)
       .then(function (res) {
         if (res.status === 200) {
           console.log("Registration success.");
+          sessionStorage.setItem(ACCESS_TOKEN, res.data.token)
         }
       })
       .catch(function (error) {

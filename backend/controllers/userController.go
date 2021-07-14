@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/LeNgocPhuc99/login-form/backend/database"
 	"github.com/LeNgocPhuc99/login-form/backend/helpers"
 	"github.com/LeNgocPhuc99/login-form/backend/models"
+
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -24,8 +26,20 @@ func Register(rw http.ResponseWriter, r *http.Request) {
 		defer cancel()
 
 		result, err := collection.InsertOne(ctx, user)
-		helpers.HandleError(err)
-		json.NewEncoder(rw).Encode(result)
+		if err != nil {
+			helpers.ErrorResponse(rw, err)
+			return
+		}
+		log.Println(result)
+
+		// generate token
+		jwtToken, err := helpers.GenerateJWT(user.Username)
+		if err != nil {
+			helpers.ErrorResponse(rw, err)
+			return
+		}
+
+		rw.Write([]byte(`{"token":"` + jwtToken + `"}`))
 	}
 }
 
@@ -42,8 +56,7 @@ func Login(rw http.ResponseWriter, r *http.Request) {
 
 	err := collection.FindOne(ctx, bson.M{"username": loginPayload.Username}).Decode(&dbUser)
 	if err != nil {
-		rw.WriteHeader(http.StatusInternalServerError)
-		rw.Write([]byte(`{"message":"` + err.Error() + `"}`))
+		helpers.ErrorResponse(rw, err)
 		return
 	}
 
@@ -56,8 +69,7 @@ func Login(rw http.ResponseWriter, r *http.Request) {
 
 	jwtToken, err := helpers.GenerateJWT(loginPayload.Username)
 	if err != nil {
-		rw.WriteHeader(http.StatusInternalServerError)
-		rw.Write([]byte(`{"message":"` + err.Error() + `"}`))
+		helpers.ErrorResponse(rw, err)
 		return
 	}
 
