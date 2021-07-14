@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
+import axios from "axios";
+
+let endpoint = "http://localhost:8080";
 
 function Register(props) {
   const [state, setState] = useState({
@@ -8,7 +11,7 @@ function Register(props) {
     email: "",
     username: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {
@@ -20,14 +23,33 @@ function Register(props) {
   };
 
   const handleSubmitClick = (e) => {
-    e.preventDefault()
-    if(state.password === state.confirmPassword) {
-      console.log("match password")
-      console.log(state.firstName, state.lastName, state.email, state.username)
+    e.preventDefault();
+    if (state.password === state.confirmPassword) {
+      sendToServer()
     } else {
-      console.log("don't match password")
+      console.log("don't match password");
     }
-  }
+  };
+
+  const sendToServer = () => {
+    const payload = {
+      firstName: state.firstName,
+      lastName: state.lastName,
+      email: state.email,
+      username: state.username,
+      password: state.password,
+    };
+    axios
+      .post(endpoint + '/api/user/register', payload)
+      .then(function (res) {
+        if (res.status === 200) {
+          console.log("Registration success.");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   return (
     <form>
@@ -109,10 +131,10 @@ function Register(props) {
         />
       </div>
 
-      <button 
-      type="submit" 
-      className="btn btn-dark btn-lg btn-block"
-      onClick={handleSubmitClick}
+      <button
+        type="submit"
+        className="btn btn-dark btn-lg btn-block"
+        onClick={handleSubmitClick}
       >
         Register
       </button>
