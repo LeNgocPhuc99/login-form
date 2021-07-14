@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 
-import { API_URL, ACCESS_TOKEN } from "../../constants/constants";
+import { API_URL, ACCESS_TOKEN, CURRENT_USER } from "../../constants/constants";
 
 // let endpoint = "http://localhost:8080";
 
@@ -10,6 +10,7 @@ function Login(props) {
   const [state, setState] = useState({
     username: "",
     password: "",
+    successMessage: null,
   });
 
   const handleChange = (e) => {
@@ -32,14 +33,23 @@ function Login(props) {
       .then(function (res) {
         if (res.status === 200) {
           console.log("Login success.");
-          sessionStorage.setItem(ACCESS_TOKEN, res.data.token)
+          setState((prevState) => ({
+            ...prevState,
+            successMessage: "Login successful. Redirect to home page.",
+          }));
+          sessionStorage.setItem(ACCESS_TOKEN, res.data.token);
+          sessionStorage.setItem(CURRENT_USER, state.username);
+          props.history.push("/home");
+          props.showError(null);
+        } else if (res.status === 204) {
+          props.showError("Username and password do not match");
+        } else {
+          props.showError("Internal server error");
         }
       })
       .catch(function (error) {
         console.log(error);
       });
-
-    console.log(payload);
   };
 
   return (

@@ -63,6 +63,7 @@ func Login(rw http.ResponseWriter, r *http.Request) {
 	passCheck := helpers.CheckPassword(loginPayload.Password, dbUser.Password)
 
 	if !passCheck {
+		rw.WriteHeader(http.StatusNoContent)
 		rw.Write([]byte(`{"response":"Wrong Password!"}`))
 		return
 	}

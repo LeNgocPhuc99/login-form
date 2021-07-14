@@ -14,6 +14,7 @@ function Register(props) {
     username: "",
     password: "",
     confirmPassword: "",
+    successMessage: null,
   });
 
   const handleChange = (e) => {
@@ -29,7 +30,7 @@ function Register(props) {
     if (state.password === state.confirmPassword) {
       sendToServer();
     } else {
-      console.log("don't match password");
+      props.showError("Password do not match");
     }
   };
 
@@ -46,7 +47,14 @@ function Register(props) {
       .then(function (res) {
         if (res.status === 200) {
           console.log("Registration success.");
-          sessionStorage.setItem(ACCESS_TOKEN, res.data.token)
+          setState((prevState) => ({
+            ...prevState,
+            successMessage: "Register successful. Redirecting to home page..",
+          }));
+          sessionStorage.setItem(ACCESS_TOKEN, res.data.token);
+          props.history.push("/home");
+        } else {
+          props.showError("Internal server error");
         }
       })
       .catch(function (error) {
