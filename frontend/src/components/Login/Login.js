@@ -1,6 +1,8 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 
+let endpoint = "http://localhost:8080";
 
 function Login(props) {
   const [state, setState] = useState({
@@ -19,9 +21,20 @@ function Login(props) {
   const handleSubmitClick = (e) => {
     e.preventDefault();
     const payload = {
-      email: state.username,
+      username: state.username,
       password: state.password,
     };
+
+    axios
+      .post(endpoint + "/api/user/login", payload)
+      .then(function (res) {
+        if (res.status === 200) {
+          console.log(res.data.token);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
     console.log(payload);
   };
